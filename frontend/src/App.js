@@ -10,7 +10,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Filter states
-  const [filterName, setFilterName] = useState("");
+  const [filterArtist, setFilterArtist] = useState(""); // Changed from filterName
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
   const [uniqueYears, setUniqueYears] = useState([]);
@@ -30,7 +30,7 @@ function App() {
           year: mural.year,
           area: mural.area,
           details: {
-            artist: mural.artist,
+            artist: mural.artist, // Now used for filtering
             address: mural.address,
             material: mural.material,
             technique: mural.technique
@@ -57,14 +57,14 @@ function App() {
 
   useEffect(() => {
     applyFilters();
-  }, [filterName, filterYear, filterArea, murals]);
+  }, [filterArtist, filterYear, filterArea, murals]); // Changed dependency
 
   const applyFilters = () => {
     let filtered = murals;
 
-    if (filterName) {
+    if (filterArtist) {
       filtered = filtered.filter(mural =>
-        mural.name.toLowerCase().includes(filterName.toLowerCase())
+        mural.details.artist.toLowerCase().includes(filterArtist.toLowerCase())
       );
     }
 
@@ -87,8 +87,8 @@ function App() {
       <FilterMenu
         isOpen={isMenuOpen}
         onClose={setIsMenuOpen}
-        filterName={filterName}
-        setFilterName={setFilterName}
+        filterArtist={filterArtist}  // Changed props
+        setFilterArtist={setFilterArtist}  // Changed props
         filterYear={filterYear}
         setFilterYear={setFilterYear}
         filterArea={filterArea}
