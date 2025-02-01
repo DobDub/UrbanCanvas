@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Murals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .mural-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .mural-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .mural-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .mural-details {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Urban Murals Collection</h1>
+    <div class="mural-container">
+        <% murals.forEach(mural=> { %>
+            <div class="mural-card">
+                <% if (mural.image) { %>
+                    <img src="<%= mural.image %>" alt="Mural image" class="mural-image">
+                    <% } %>
+                        <div class="mural-details">
+                            <h2>
+                                <%= mural.name || 'Untitled Mural' %>
+                            </h2>
+                            <p><strong>Artist:</strong>
+                                <%= mural.artist %>
+                            </p>
+                            <p><strong>Location:</strong>
+                                <%= mural.address %>
+                            </p>
+                            <p><strong>Year:</strong>
+                                <%= mural.year %>
+                            </p>
+                            <p><strong>Program:</strong>
+                                <%= mural.program %>
+                            </p>
+                            <p><strong>Coordinates:</strong>
+                                <%= mural.latitude %>, <%= mural.longitude %>
+                            </p>
+                        </div>
+            </div>
+            <% }); %>
+    </div>
+</body>
+
+</html>
