@@ -88,8 +88,8 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
               icon={
                 window.google
                   ? {
-                    url: require(mural.type === "mural" ? "../assets/spnfico.png" : "../assets/museumicon.png"),
-                    scaledSize: new window.google.maps.Size(25, 25), // Adjust size as needed
+                    url: require(mural.type === "mural" ? "../assets/spnfico.png" : "../assets/publicart.png"),
+                    scaledSize: new window.google.maps.Size(32, 32), // Adjust size as needed
                   }
                   : undefined
               }
