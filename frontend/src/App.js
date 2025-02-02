@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MapComponent from "./components/Map";
 import FilterMenu from "./components/FilterMenu";
+import "./App.css";
 
 function App() {
   const [murals, setMurals] = useState([]);
@@ -10,7 +11,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Filter states
-  const [filterArtist, setFilterArtist] = useState(""); // Changed from filterName
+  const [filterArtist, setFilterArtist] = useState(""); 
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
   const [uniqueYears, setUniqueYears] = useState([]);
@@ -28,19 +29,18 @@ function App() {
           name: mural.name,
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
-          museum: mural.museum || "Unknown Museum", // Added museum field
+          year: mural.year, // Keep year outside details for easier filtering
           area: mural.area,
           details: {
-            artist: mural.artist,
-            address: mural.address,
-            year: mural.year, // Ensure year is inside details
-            material: mural.material,
-            technique: mural.technique
+            artist: mural.artist || "Unknown Artist",
+            address: mural.address || "No Address Provided",
+            material: mural.material || "Unknown",
+            technique: mural.technique || "Unknown"
           }
         }));
 
         // Extract unique years and areas
-        const years = [...new Set(formattedMurals.map(m => m.details.year))].sort();
+        const years = [...new Set(formattedMurals.map(m => m.year))].sort();
         const areas = [...new Set(formattedMurals.map(m => m.area))].sort();
 
         setMurals(formattedMurals);
@@ -71,7 +71,7 @@ function App() {
     }
 
     if (filterYear !== "All") {
-      filtered = filtered.filter(mural => mural.details.year === filterYear);
+      filtered = filtered.filter(mural => mural.year === filterYear);
     }
 
     if (filterArea !== "All") {
@@ -81,14 +81,21 @@ function App() {
     setFilteredMurals(filtered);
   };
 
-  if (loading) return <div>Loading murals...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="loading">Loading murals...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div>
+      {/* Styled Header Section */}
+      <div className="header">
+        Montreal Art Murals
+        <div className="header-subtext">Explore murals all around the city</div>
+      </div>
+
+      {/* Filter Menu */}
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(!isMenuOpen)} // Toggle the menu state
+        onClose={() => setIsMenuOpen(!isMenuOpen)} 
         filterArtist={filterArtist}
         setFilterArtist={setFilterArtist}
         filterYear={filterYear}
@@ -100,17 +107,19 @@ function App() {
         murals={murals} // Pass murals to FilterMenu
       />
 
-      <h1 style={{ textAlign: "center", marginTop: 60 }}>Montreal Art Murals</h1>
-      <MapComponent markers={filteredMurals} />
+      {/* Map Component */}
+      <div className="map-container">
+        <MapComponent markers={filteredMurals} />
+      </div>
 
+      {/* No Murals Message */}
       {filteredMurals.length === 0 && (
-        <div style={{ textAlign: "center", padding: 20 }}>
+        <div className="no-results">
           No murals found matching the current filters
         </div>
       )}
     </div>
   );
 }
-
 
 export default App;
