@@ -16,7 +16,7 @@ const MapComponent = ({ markers }) => {
 
   // Handle clicks outside the map
   const handleMapClick = () => {
-    setSelectedMural(null); // Close InfoWindow when clicking outside
+    setSelectedMural(null); // Closes InfoWindow when clicking outside
   };
 
   return (
@@ -25,7 +25,7 @@ const MapComponent = ({ markers }) => {
         mapContainerStyle={containerStyle} 
         center={defaultCenter} 
         zoom={12}
-        onClick={handleMapClick} // Handles closing when clicking on the map
+        onClick={handleMapClick} // Closes InfoWindow when clicking anywhere on the map
       >
         
         {/* Murals Pins */}
@@ -45,12 +45,11 @@ const MapComponent = ({ markers }) => {
           >
             <div>
               <h3>{selectedMural.name}</h3>
-              <p><strong>Museum:</strong> {selectedMural.museum || "No museum listed"}</p>
-              <p><strong>Artist:</strong> {selectedMural.details.artist}</p>
-              <p><strong>Year:</strong> {selectedMural.details.year}</p>
-              <p><strong>Address:</strong> {selectedMural.details.address}</p>
-              <p><strong>Material:</strong> {selectedMural.details.material}</p>
-              <p><strong>Technique:</strong> {selectedMural.details.technique}</p>
+              <p><strong>Artist:</strong> {selectedMural.details.artist || "Unknown"}</p>
+              <p><strong>Year:</strong> {selectedMural.details.year || "Unknown"}</p>
+              <p><strong>Address:</strong> {selectedMural.details.address || "No address available"}</p>
+              <p><strong>Material:</strong> {selectedMural.details.material || "Unknown"}</p>
+              <p><strong>Technique:</strong> {selectedMural.details.technique || "Unknown"}</p>
             </div>
           </InfoWindow>
         )}
