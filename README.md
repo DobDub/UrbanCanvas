@@ -44,3 +44,13 @@ We learned how to connect our MongoDB database with Google Map's api.
 ## What's next for UrbanCanvas
 Our web app has potential to be more efficient using leaflet as the map library.
 Although the insights gained from viewing the data in this way is interesting, adding more relevant datasets to the map will increase the amount of options and custom routes a user can make.
+
+
+## IMAGES
+![1](https://github.com/user-attachments/assets/ea237395-4c85-4ccc-a042-78cad9a9520e)
+![2](https://github.com/user-attachments/assets/de8b761d-515e-48a8-94d9-7a7e8b02d747)
+![3](https://github.com/user-attachments/assets/d307f54c-297a-4a4f-8276-95be700f42d5)
+![4](https://github.com/user-attachments/assets/ddc9821f-9b38-46dc-a262-1238bd3bbd9c)
+
+
+
