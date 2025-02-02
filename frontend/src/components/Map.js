@@ -132,6 +132,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
       libraries={["places"]}
     >
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        {/* Search Box */}
         <Autocomplete onLoad={onSearchBoxLoad} onPlaceChanged={onPlaceChanged}>
           <input
             type="text"
@@ -154,6 +155,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
           />
         </Autocomplete>
 
+        {/* Google Map */}
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
@@ -161,6 +163,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
           onClick={() => setSelectedMural(null)}
           onLoad={() => setMapLoaded(true)}
         >
+          {/* Murals Pins */}
           {markers.map((mural) => (
             <Marker
               key={mural.id}
@@ -173,6 +176,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
           {directions && <DirectionsRenderer options={{ directions }} />}
         </GoogleMap>
 
+        {/* Mural Info Window */}
         {selectedMural && (
           <Dialog
             open={Boolean(selectedMural)}
