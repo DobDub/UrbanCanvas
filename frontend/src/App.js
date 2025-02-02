@@ -10,7 +10,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Filter states
-  const [filterName, setFilterName] = useState("");
+  const [filterArtist, setFilterArtist] = useState(""); // Changed from filterName
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
   const [uniqueYears, setUniqueYears] = useState([]);
@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     const fetchMurals = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/murals"); 
+        const response = await fetch("http://localhost:8000/api/murals");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
 
@@ -59,14 +59,14 @@ function App() {
 
   useEffect(() => {
     applyFilters();
-  }, [filterName, filterYear, filterArea, murals]);
+  }, [filterArtist, filterYear, filterArea, murals]);
 
   const applyFilters = () => {
     let filtered = murals;
 
-    if (filterName) {
+    if (filterArtist) {
       filtered = filtered.filter(mural =>
-        mural.name.toLowerCase().includes(filterName.toLowerCase())
+        mural.details.artist.toLowerCase().includes(filterArtist.toLowerCase())
       );
     }
 
@@ -88,9 +88,9 @@ function App() {
     <div>
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)} // Fixed closing function
-        filterName={filterName}
-        setFilterName={setFilterName}
+        onClose={() => setIsMenuOpen(!isMenuOpen)} // Toggle the menu state
+        filterArtist={filterArtist}
+        setFilterArtist={setFilterArtist}
         filterYear={filterYear}
         setFilterYear={setFilterYear}
         filterArea={filterArea}
@@ -110,5 +110,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

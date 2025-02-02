@@ -14,8 +14,8 @@ import CloseIcon from "@mui/icons-material/Close";
 const FilterMenu = ({
     isOpen,
     onClose,
-    filterArtist,  // Changed from filterName
-    setFilterArtist,  // Changed from setFilterName
+    filterArtist,
+    setFilterArtist,
     filterYear,
     setFilterYear,
     filterArea,
@@ -26,22 +26,21 @@ const FilterMenu = ({
     return (
         <>
             <IconButton
-                onClick={() => onClose(true)}
+                onClick={onClose} // Directly call onClose without arguments
                 style={{ position: "fixed", top: 10, left: 10, zIndex: 1000 }}
             >
                 <MenuIcon fontSize="large" />
             </IconButton>
 
-            <Drawer anchor="left" open={isOpen} onClose={() => onClose(false)}>
+            <Drawer anchor="left" open={isOpen} onClose={onClose}>
                 <div style={{ width: 250, padding: 20 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <h2>Filters</h2>
-                        <IconButton onClick={() => onClose(false)}>
+                        <IconButton onClick={onClose}>
                             <CloseIcon />
                         </IconButton>
                     </div>
 
-                    {/* Changed to search by artist */}
                     <TextField
                         label="Search by Artist"
                         variant="outlined"
@@ -68,7 +67,6 @@ const FilterMenu = ({
                                 ))}
                         </Select>
                     </FormControl>
-
 
                     <FormControl fullWidth style={{ marginBottom: 20 }}>
                         <InputLabel>Area</InputLabel>
