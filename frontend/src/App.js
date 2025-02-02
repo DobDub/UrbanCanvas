@@ -17,6 +17,7 @@ function App() {
   const [filterArtist, setFilterArtist] = useState("");
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
+  const [filterType, setFilterType] = useState("All"); // Add filterType state here
   const [uniqueYears, setUniqueYears] = useState([]);
   const [uniqueAreas, setUniqueAreas] = useState([]);
 
@@ -63,7 +64,7 @@ function App() {
 
   useEffect(() => {
     applyFilters();
-  }, [filterArtist, filterYear, filterArea, murals]);
+  }, [filterArtist, filterYear, filterArea, filterType, murals]); // Add filterType to the dependency array
 
   const applyFilters = () => {
     let filtered = murals;
@@ -80,6 +81,10 @@ function App() {
 
     if (filterArea !== "All") {
       filtered = filtered.filter((mural) => mural.area === filterArea);
+    }
+
+    if (filterType !== "All") {
+      filtered = filtered.filter((mural) => mural.type === filterType);
     }
 
     setFilteredMurals(filtered);
@@ -135,6 +140,8 @@ function App() {
         setFilterYear={setFilterYear}
         filterArea={filterArea}
         setFilterArea={setFilterArea}
+        filterType={filterType} // Pass filterType state
+        setFilterType={setFilterType} // Pass setFilterType function
         uniqueYears={uniqueYears}
         uniqueAreas={uniqueAreas}
         murals={murals}
