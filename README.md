@@ -1,5 +1,5 @@
 # UrbanCanvas
-Reflecting the city of Montréal as a canvas.
+Reflecting the city of Montréal as a canvas. Created in CONUHACKS IX in 24 hours.
 
 ## Inspiration
 Seeing MLH’s incentive to use MongoDB we decided to do DRW's challenge of using large datasets. After searching through the city of Montreal's public database, we chose 3 datasets that interested us: subsidized murals, inventory of all public art and municipal cultural sites. We wanted to use these four as we felt that the data would provide an interesting lens to look at the city through. After more brainstorming we landed on the idea of visualising the data in a web app. We felt that it could deliver a user-friendly experience to citizens or tourists who would like to see parts of Montreal that make up its culture.
