@@ -19,28 +19,26 @@ function App() {
   useEffect(() => {
     const fetchMurals = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/murals"); 
+        const response = await fetch("http://localhost:8000/api/murals");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
 
         const formattedMurals = data.map(mural => ({
-          id: mural.id || Math.random(), // Ensure unique keys
           name: mural.name,
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
-          museum: mural.museum || "Unknown Museum", // Added museum field
+          year: mural.year,
           area: mural.area,
           details: {
             artist: mural.artist,
             address: mural.address,
-            year: mural.year, // Ensure year is inside details
             material: mural.material,
             technique: mural.technique
           }
         }));
 
         // Extract unique years and areas
-        const years = [...new Set(formattedMurals.map(m => m.details.year))].sort();
+        const years = [...new Set(formattedMurals.map(m => m.year))].sort();
         const areas = [...new Set(formattedMurals.map(m => m.area))].sort();
 
         setMurals(formattedMurals);
@@ -71,7 +69,7 @@ function App() {
     }
 
     if (filterYear !== "All") {
-      filtered = filtered.filter(mural => mural.details.year === filterYear);
+      filtered = filtered.filter(mural => mural.year === filterYear);
     }
 
     if (filterArea !== "All") {
@@ -88,7 +86,7 @@ function App() {
     <div>
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)} // Fixed closing function
+        onClose={setIsMenuOpen}
         filterName={filterName}
         setFilterName={setFilterName}
         filterYear={filterYear}
