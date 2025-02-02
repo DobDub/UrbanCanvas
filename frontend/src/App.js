@@ -30,7 +30,7 @@ function App() {
 
         const formattedMurals = data.map((mural) => ({
           id: mural.id || Math.random(),
-          name: mural.name && mural.name.trim() ? mural.name : "Unnamed Mural",
+          name: mural.name && mural.name.trim() ? mural.name : "",
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
           year: mural.year,
@@ -93,7 +93,14 @@ function App() {
   const addToTour = (mural) => {
     setTourMurals((prev) => {
       if (prev.some((m) => m.id === mural.id)) return prev;
-      return [...prev, mural];
+
+      // Check if the mural name is "Unnamed Mural" and replace it with the artist's name
+      const updatedMural = {
+        ...mural,
+        name: mural.name === "" ? mural.details.artist : mural.name,
+      };
+
+      return [...prev, updatedMural];
     });
   };
 
@@ -113,13 +120,16 @@ function App() {
   };
 
   const generatePathString = () => {
-    return tourMurals
-      .map((m, index) => (
+    return tourMurals.map((m, index) => {
+      const muralName = m.name === "Unnamed Mural" ? m.details.artist : m.name;
+      return (
         <span key={m.id} className="path-step">
-          <span className="step-number">{index + 1}</span> {m.name}
+          <span className="step-number">{index + 1}</span> {muralName}
         </span>
-      ));
+      );
+    });
   };
+
 
   if (loading) return <div className="loading">Loading murals...</div>;
   if (error) return <div className="error">Error: {error}</div>;

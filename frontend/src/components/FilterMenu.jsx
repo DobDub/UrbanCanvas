@@ -110,7 +110,6 @@ const FilterMenu = ({
                         <h3 style={{ marginBottom: 10 }}>Legend</h3>
                         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                             <LegendItem icon={muralsIcon} label="Murals" />
-                            <LegendItem icon={spnficoIcon} label="Street Art" />
                             <LegendItem icon={publicArtIcon} label="Public Art" />
                             <LegendItem icon={libraryIcon} label="Library" />
                             <LegendItem icon={museumIcon} label="Museum" />
