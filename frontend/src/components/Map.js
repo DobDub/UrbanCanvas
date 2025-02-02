@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -12,59 +12,50 @@ const defaultCenter = {
 };
 
 const MapComponent = ({ markers }) => {
-  const [map, setMap] = useState(null);
-  const [autocomplete, setAutocomplete] = useState(null);
-  const [searchLocation, setSearchLocation] = useState(defaultCenter);
+  const [selectedMural, setSelectedMural] = useState(null);
 
-  const onLoad = (mapInstance) => {
-    setMap(mapInstance);
-  };
-
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      const place = autocomplete.getPlace();
-      if (place.geometry) {
-        setSearchLocation({
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        });
-        map.panTo({
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        });
-      }
-    }
+  // Handle clicks outside the map
+  const handleMapClick = () => {
+    setSelectedMural(null); // Close InfoWindow when clicking outside
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-      <div style={{ position: "relative", width: "100%" }}>
-        {/* Search Box */}
-        <Autocomplete onLoad={setAutocomplete} onPlaceChanged={onPlaceChanged}>
-          <input
-            type="text"
-            placeholder="Search for a location..."
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "300px",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              zIndex: "1000",
-            }}
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+      <GoogleMap 
+        mapContainerStyle={containerStyle} 
+        center={defaultCenter} 
+        zoom={12}
+        onClick={handleMapClick} // Handles closing when clicking on the map
+      >
+        
+        {/* Murals Pins */}
+        {markers.map((mural) => (
+          <Marker
+            key={mural.id}
+            position={{ lat: mural.lat, lng: mural.lng }}
+            onClick={() => setSelectedMural(mural)}
           />
-        </Autocomplete>
+        ))}
 
-        {/* Map */}
-        <GoogleMap mapContainerStyle={containerStyle} center={searchLocation} zoom={12} onLoad={onLoad}>
-          {markers.map((mural, index) => (
-            <Marker key={index} position={{ lat: mural.lat, lng: mural.lng }} />
-          ))}
-        </GoogleMap>
-      </div>
+        {/* Info Window when a mural is clicked */}
+        {selectedMural && (
+          <InfoWindow
+            position={{ lat: selectedMural.lat, lng: selectedMural.lng }}
+            onCloseClick={() => setSelectedMural(null)}
+          >
+            <div>
+              <h3>{selectedMural.name}</h3>
+              <p><strong>Museum:</strong> {selectedMural.museum || "No museum listed"}</p>
+              <p><strong>Artist:</strong> {selectedMural.details.artist}</p>
+              <p><strong>Year:</strong> {selectedMural.details.year}</p>
+              <p><strong>Address:</strong> {selectedMural.details.address}</p>
+              <p><strong>Material:</strong> {selectedMural.details.material}</p>
+              <p><strong>Technique:</strong> {selectedMural.details.technique}</p>
+            </div>
+          </InfoWindow>
+        )}
+
+      </GoogleMap>
     </LoadScript>
   );
 };

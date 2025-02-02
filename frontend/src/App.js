@@ -10,7 +10,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Filter states
-  const [filterArtist, setFilterArtist] = useState(""); // Changed from filterName
+  const [filterName, setFilterName] = useState("");
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
   const [uniqueYears, setUniqueYears] = useState([]);
@@ -19,26 +19,28 @@ function App() {
   useEffect(() => {
     const fetchMurals = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/murals");
+        const response = await fetch("http://localhost:8000/api/murals"); 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
 
         const formattedMurals = data.map(mural => ({
+          id: mural.id || Math.random(), // Ensure unique keys
           name: mural.name,
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
-          year: mural.year,
+          museum: mural.museum || "Unknown Museum", // Added museum field
           area: mural.area,
           details: {
-            artist: mural.artist, // Now used for filtering
+            artist: mural.artist,
             address: mural.address,
+            year: mural.year, // Ensure year is inside details
             material: mural.material,
             technique: mural.technique
           }
         }));
 
         // Extract unique years and areas
-        const years = [...new Set(formattedMurals.map(m => m.year))].sort();
+        const years = [...new Set(formattedMurals.map(m => m.details.year))].sort();
         const areas = [...new Set(formattedMurals.map(m => m.area))].sort();
 
         setMurals(formattedMurals);
@@ -57,19 +59,19 @@ function App() {
 
   useEffect(() => {
     applyFilters();
-  }, [filterArtist, filterYear, filterArea, murals]); // Changed dependency
+  }, [filterName, filterYear, filterArea, murals]);
 
   const applyFilters = () => {
     let filtered = murals;
 
-    if (filterArtist) {
+    if (filterName) {
       filtered = filtered.filter(mural =>
-        mural.details.artist.toLowerCase().includes(filterArtist.toLowerCase())
+        mural.name.toLowerCase().includes(filterName.toLowerCase())
       );
     }
 
     if (filterYear !== "All") {
-      filtered = filtered.filter(mural => mural.year === filterYear);
+      filtered = filtered.filter(mural => mural.details.year === filterYear);
     }
 
     if (filterArea !== "All") {
@@ -86,9 +88,9 @@ function App() {
     <div>
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={setIsMenuOpen}
-        filterArtist={filterArtist}  // Changed props
-        setFilterArtist={setFilterArtist}  // Changed props
+        onClose={() => setIsMenuOpen(false)} // Fixed closing function
+        filterName={filterName}
+        setFilterName={setFilterName}
         filterYear={filterYear}
         setFilterYear={setFilterYear}
         filterArea={filterArea}
