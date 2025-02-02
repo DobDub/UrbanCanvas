@@ -1,5 +1,15 @@
-import React, { useState, useRef } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from "@react-google-maps/api";
+import React, { useState } from "react";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  Autocomplete
+} from "@react-google-maps/api";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 const containerStyle = {
   width: "100%",
@@ -18,7 +28,8 @@ const Map = ({ markers }) => {
   const [searchBox, setSearchBox] = useState(null);
 
   const handleMapClick = () => {
-    setSelectedMural(null); // Closes InfoWindow when clicking outside
+    // Optionally close the dialog if you want to close it when clicking the map
+    // setSelectedMural(null);
   };
 
   const onSearchBoxLoad = (ref) => {
@@ -38,7 +49,10 @@ const Map = ({ markers }) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+      libraries={["places"]}
+    >
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
         {/* Search Box */}
         <Autocomplete onLoad={onSearchBoxLoad} onPlaceChanged={onPlaceChanged}>
@@ -70,7 +84,7 @@ const Map = ({ markers }) => {
           zoom={12}
           onClick={handleMapClick}
         >
-          {/* Murals Pins */}
+          {/* Murals Markers */}
           {markers.map((mural) => (
             <Marker
               key={mural.id}
@@ -78,24 +92,67 @@ const Map = ({ markers }) => {
               onClick={() => setSelectedMural(mural)}
             />
           ))}
-
-          {/* Info Window when a mural is clicked */}
-          {selectedMural && (
-            <InfoWindow
-              position={{ lat: selectedMural.lat, lng: selectedMural.lng }}
-              onCloseClick={() => setSelectedMural(null)}
-            >
-              <div>
-                <h3>{selectedMural.name}</h3>
-                <p><strong>Artist:</strong> {selectedMural.details.artist || "Unknown"}</p>
-                <p><strong>Year:</strong> {selectedMural.details.year || "Unknown"}</p>
-                <p><strong>Address:</strong> {selectedMural.details.address || "No address available"}</p>
-                <p><strong>Material:</strong> {selectedMural.details.material || "Unknown"}</p>
-                <p><strong>Technique:</strong> {selectedMural.details.technique || "Unknown"}</p>
-              </div>
-            </InfoWindow>
-          )}
         </GoogleMap>
+
+        {/* Dialog for a large view with the mural info */}
+        {selectedMural && (
+          <Dialog
+            open={Boolean(selectedMural)}
+            onClose={() => setSelectedMural(null)}
+            fullWidth
+            maxWidth="md"
+          >
+            <DialogTitle>{selectedMural.name}</DialogTitle>
+            <DialogContent dividers>
+              <p>
+                <strong>Artist:</strong> {selectedMural.details.artist || "Unknown"}
+              </p>
+              <p>
+                <strong>Year:</strong> {selectedMural.details.year || "Unknown"}
+              </p>
+              <p>
+                <strong>Address:</strong> {selectedMural.details.address || "No address available"}
+              </p>
+              <p>
+                <strong>Material:</strong> {selectedMural.details.material || "Unknown"}
+              </p>
+              <p>
+                <strong>Technique:</strong> {selectedMural.details.technique || "Unknown"}
+              </p>
+              <div style={{ marginTop: "10px" }}>
+                {selectedMural.image ? (
+                  // Wrap the image in an anchor tag to open the full image in a new tab
+                  <a
+                    href={selectedMural.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={selectedMural.image}
+                      alt={selectedMural.name}
+                      style={{
+                        width: "100%",
+                        maxHeight: "400px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                        marginTop: "10px",
+                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+                        cursor: "pointer"
+                      }}
+                    />
+                  </a>
+                ) : (
+                  "No image available"
+                )}
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setSelectedMural(null)} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     </LoadScript>
   );

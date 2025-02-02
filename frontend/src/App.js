@@ -11,7 +11,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Filter states
-  const [filterArtist, setFilterArtist] = useState(""); 
+  const [filterArtist, setFilterArtist] = useState("");
   const [filterYear, setFilterYear] = useState("All");
   const [filterArea, setFilterArea] = useState("All");
   const [uniqueYears, setUniqueYears] = useState([]);
@@ -31,6 +31,7 @@ function App() {
           lng: parseFloat(mural.longitude),
           year: mural.year, // Keep year outside details for easier filtering
           area: mural.area,
+          image: mural.image,
           details: {
             artist: mural.artist || "Unknown Artist",
             address: mural.address || "No Address Provided",
@@ -95,7 +96,7 @@ function App() {
       {/* Filter Menu */}
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(!isMenuOpen)} 
+        onClose={() => setIsMenuOpen(!isMenuOpen)}
         filterArtist={filterArtist}
         setFilterArtist={setFilterArtist}
         filterYear={filterYear}
