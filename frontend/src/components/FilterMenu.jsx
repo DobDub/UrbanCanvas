@@ -7,10 +7,22 @@ import {
     Select,
     FormControl,
     InputLabel,
-    Autocomplete // Import Autocomplete
+    Autocomplete
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+
+// Import icons from assets folder
+import muralsIcon from "../assets/murals.png";
+import spnficoIcon from "../assets/spnfico.png";
+import publicArtIcon from "../assets/publicart.png";
+import libraryIcon from "../assets/libraryicon.png";
+import museumIcon from "../assets/museumicon.png";
+import churchIcon from "../assets/churchicon.png";
+import theaterIcon from "../assets/theatericon.png";
+import planetariumIcon from "../assets/planetariumicon.png";
+import opIcon from "../assets/opicon.png";
+import buildingIcon from "../assets/basicbuilding.png";
 
 const FilterMenu = ({
     isOpen,
@@ -21,15 +33,11 @@ const FilterMenu = ({
     setFilterYear,
     filterArea,
     setFilterArea,
-    filterType, // Add filterType prop
-    setFilterType, // Add setFilterType prop
     uniqueYears,
     uniqueAreas,
-    murals // Add murals prop
+    murals
 }) => {
-    // Extract unique artist names and types from murals
     const uniqueArtists = murals ? [...new Set(murals.map(mural => mural.details.artist))].sort() : [];
-    const uniqueTypes = murals ? [...new Set(murals.map(mural => mural.type))].sort() : []; // Extract unique types
 
     return (
         <>
@@ -97,24 +105,34 @@ const FilterMenu = ({
                         </Select>
                     </FormControl>
 
-                    {/* New Filter for Type */}
-                    <FormControl fullWidth style={{ marginBottom: 20 }}>
-                        <InputLabel>Type</InputLabel>
-                        <Select
-                            value={filterType}
-                            onChange={(e) => setFilterType(e.target.value)}
-                            label="Type"
-                        >
-                            <MenuItem value="All">All Types</MenuItem>
-                            {uniqueTypes.map(type => (
-                                <MenuItem key={type} value={type}>{type}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    {/* Legend Section */}
+                    <div style={{ marginTop: 30 }}>
+                        <h3 style={{ marginBottom: 10 }}>Legend</h3>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                            <LegendItem icon={muralsIcon} label="Murals" />
+                            <LegendItem icon={spnficoIcon} label="Street Art" />
+                            <LegendItem icon={publicArtIcon} label="Public Art" />
+                            <LegendItem icon={libraryIcon} label="Library" />
+                            <LegendItem icon={museumIcon} label="Museum" />
+                            <LegendItem icon={churchIcon} label="Church" />
+                            <LegendItem icon={theaterIcon} label="Theater" />
+                            <LegendItem icon={planetariumIcon} label="Planetarium" />
+                            <LegendItem icon={opIcon} label="Opera House" />
+                            <LegendItem icon={buildingIcon} label="Historic Building" />
+                        </div>
+                    </div>
                 </div>
             </Drawer>
         </>
     );
 };
+
+// Component for Legend Item
+const LegendItem = ({ icon, label }) => (
+    <div style={{ display: "flex", alignItems: "center" }}>
+        <img src={icon} alt={label} style={{ width: 25, height: 25, marginRight: 10 }} />
+        <span>{label}</span>
+    </div>
+);
 
 export default FilterMenu;
