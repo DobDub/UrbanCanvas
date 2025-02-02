@@ -3,7 +3,9 @@ import {
   GoogleMap,
   LoadScript,
   Marker,
-  Autocomplete
+  Autocomplete,
+  DirectionsService,
+  DirectionsRenderer
 } from "@react-google-maps/api";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -13,24 +15,20 @@ import Button from "@mui/material/Button";
 
 const containerStyle = {
   width: "100%",
-  height: "calc(100vh - 100px)", // Adjusts to full height minus header
-  minHeight: "500px", // Ensures minimum height
+  height: "calc(100vh - 100px)",
+  minHeight: "500px",
 };
 
 const defaultCenter = {
-  lat: 45.5017, // Montreal latitude
-  lng: -73.5673, // Montreal longitude
+  lat: 45.5017,
+  lng: -73.5673,
 };
 
-const Map = ({ markers }) => {
+const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
   const [selectedMural, setSelectedMural] = useState(null);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [searchBox, setSearchBox] = useState(null);
-
-  const handleMapClick = () => {
-    // Optionally close the dialog if you want to close it when clicking the map
-    // setSelectedMural(null);
-  };
+  const [directions, setDirections] = useState(null);
 
   const onSearchBoxLoad = (ref) => {
     setSearchBox(ref);
@@ -54,7 +52,6 @@ const Map = ({ markers }) => {
       libraries={["places"]}
     >
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {/* Search Box */}
         <Autocomplete onLoad={onSearchBoxLoad} onPlaceChanged={onPlaceChanged}>
           <input
             type="text"
@@ -77,14 +74,12 @@ const Map = ({ markers }) => {
           />
         </Autocomplete>
 
-        {/* Map */}
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
           zoom={12}
-          onClick={handleMapClick}
+          onClick={() => setSelectedMural(null)}
         >
-          {/* Murals Markers */}
           {markers.map((mural) => (
             <Marker
               key={mural.id}
@@ -92,9 +87,40 @@ const Map = ({ markers }) => {
               onClick={() => setSelectedMural(mural)}
             />
           ))}
+
+          {tourMurals.length >= 2 && (
+            <>
+              <DirectionsService
+                options={{
+                  destination: {
+                    lat: tourMurals[tourMurals.length - 1].lat,
+                    lng: tourMurals[tourMurals.length - 1].lng
+                  },
+                  origin: {
+                    lat: tourMurals[0].lat,
+                    lng: tourMurals[0].lng
+                  },
+                  waypoints: tourMurals.slice(1, -1).map(mural => ({
+                    location: { lat: mural.lat, lng: mural.lng },
+                    stopover: true,
+                  })),
+                  travelMode: 'WALKING',
+                  optimizeWaypoints: true,
+                }}
+                callback={(result, status) => {
+                  if (status === 'OK') {
+                    setDirections(result);
+                    onDirectionsCalculated(result);
+                  } else {
+                    onDirectionsCalculated(null);
+                  }
+                }}
+              />
+              {directions && <DirectionsRenderer options={{ directions }} />}
+            </>
+          )}
         </GoogleMap>
 
-        {/* Dialog for a large view with the mural info */}
         {selectedMural && (
           <Dialog
             open={Boolean(selectedMural)}
@@ -108,7 +134,7 @@ const Map = ({ markers }) => {
                 <strong>Artist:</strong> {selectedMural.details.artist || "Unknown"}
               </p>
               <p>
-                <strong>Year:</strong> {selectedMural.details.year || "Unknown"}
+                <strong>Year:</strong> {selectedMural.year || "Unknown"}
               </p>
               <p>
                 <strong>Address:</strong> {selectedMural.details.address || "No address available"}
@@ -121,7 +147,6 @@ const Map = ({ markers }) => {
               </p>
               <div style={{ marginTop: "10px" }}>
                 {selectedMural.image ? (
-                  // Wrap the image in an anchor tag to open the full image in a new tab
                   <a
                     href={selectedMural.image}
                     target="_blank"
@@ -147,9 +172,16 @@ const Map = ({ markers }) => {
               </div>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setSelectedMural(null)} color="primary">
-                Close
+              <Button
+                onClick={() => addToTour(selectedMural)}
+                color="primary"
+                disabled={tourMurals.some(m => m.id === selectedMural.id)}
+              >
+                {tourMurals.some(m => m.id === selectedMural.id)
+                  ? "Added to Tour"
+                  : "Add to Tour"}
               </Button>
+              <Button onClick={() => setSelectedMural(null)}>Close</Button>
             </DialogActions>
           </Dialog>
         )}
