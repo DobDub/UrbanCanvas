@@ -6,7 +6,8 @@ import {
     MenuItem,
     Select,
     FormControl,
-    InputLabel
+    InputLabel,
+    Autocomplete // Import Autocomplete
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,12 +22,16 @@ const FilterMenu = ({
     filterArea,
     setFilterArea,
     uniqueYears,
-    uniqueAreas
+    uniqueAreas,
+    murals // Add murals prop
 }) => {
+    // Extract unique artist names from murals
+    const uniqueArtists = murals ? [...new Set(murals.map(mural => mural.details.artist))].sort() : [];
+
     return (
         <>
             <IconButton
-                onClick={onClose} // Directly call onClose without arguments
+                onClick={onClose}
                 style={{ position: "fixed", top: 10, left: 10, zIndex: 1000 }}
             >
                 <MenuIcon fontSize="large" />
@@ -41,13 +46,20 @@ const FilterMenu = ({
                         </IconButton>
                     </div>
 
-                    <TextField
-                        label="Search by Artist"
-                        variant="outlined"
-                        fullWidth
+                    {/* Autocomplete for Artist */}
+                    <Autocomplete
                         value={filterArtist}
-                        onChange={(e) => setFilterArtist(e.target.value)}
-                        style={{ marginBottom: 20 }}
+                        onChange={(event, newValue) => setFilterArtist(newValue || "")}
+                        options={uniqueArtists}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Search by Artist"
+                                variant="outlined"
+                                fullWidth
+                                style={{ marginBottom: 20 }}
+                            />
+                        )}
                     />
 
                     <FormControl fullWidth style={{ marginBottom: 20 }}>

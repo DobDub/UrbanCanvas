@@ -97,6 +97,7 @@ function App() {
         setFilterArea={setFilterArea}
         uniqueYears={uniqueYears}
         uniqueAreas={uniqueAreas}
+        murals={murals} // Pass murals to FilterMenu
       />
 
       <h1 style={{ textAlign: "center", marginTop: 60 }}>Montreal Art Murals</h1>
