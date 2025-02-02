@@ -21,12 +21,15 @@ const FilterMenu = ({
     setFilterYear,
     filterArea,
     setFilterArea,
+    filterType, // Add filterType prop
+    setFilterType, // Add setFilterType prop
     uniqueYears,
     uniqueAreas,
     murals // Add murals prop
 }) => {
-    // Extract unique artist names from murals
+    // Extract unique artist names and types from murals
     const uniqueArtists = murals ? [...new Set(murals.map(mural => mural.details.artist))].sort() : [];
+    const uniqueTypes = murals ? [...new Set(murals.map(mural => mural.type))].sort() : []; // Extract unique types
 
     return (
         <>
@@ -90,6 +93,21 @@ const FilterMenu = ({
                             <MenuItem value="All">All Areas</MenuItem>
                             {uniqueAreas.map(area => (
                                 <MenuItem key={area} value={area}>{area}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* New Filter for Type */}
+                    <FormControl fullWidth style={{ marginBottom: 20 }}>
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            label="Type"
+                        >
+                            <MenuItem value="All">All Types</MenuItem>
+                            {uniqueTypes.map(type => (
+                                <MenuItem key={type} value={type}>{type}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
