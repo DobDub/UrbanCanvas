@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MapComponent from "./components/Map";
 import FilterMenu from "./components/FilterMenu";
+import UrbanCanvas from './assets/UrbanCanvasLogo.png'; // Import the image
 import "./App.css";
 
 function App() {
@@ -121,7 +122,7 @@ function App() {
   return (
     <div>
       <div className="header">
-        Montreal Art Murals
+        <img src={UrbanCanvas} alt="Urban Canvas" className="header-image" />
         <div className="header-subtext">Explore murals all around the city</div>
       </div>
 

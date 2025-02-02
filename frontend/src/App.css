@@ -10,13 +10,19 @@ body {
 
 /* Header Section */
 .header {
-  background: linear-gradient(to right, #f1d684, #d39c64);
+  background: linear-gradient(to right, #f6b5aa, #ea4f36);
   color: white;
   text-align: center;
   padding: 20px 0;
   font-size: 24px;
   font-weight: bold;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-image {
+  max-width: 100%; /* Ensure the image doesn't overflow */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 100px; /* Adjust as needed */
 }
 
 .header-subtext {
