@@ -1,5 +1,6 @@
 /* App.css */
 
+/* General Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -42,4 +43,89 @@ body {
   padding: 20px;
   font-size: 18px;
   color: #333;
+}
+
+/* Tour Section */
+.tour-section {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tour Path Box */
+.path-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  overflow-x: auto;
+  padding: 10px;
+  background: #fff9e6;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/* Path Steps (Multistep) */
+.path-step {
+  display: flex;
+  align-items: center;
+  background: #f4f4f4;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.step-number {
+  background: #d39c64;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+/* Route Information */
+.route-info {
+  background: #fff9e6;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Clear Tour Button */
+.clear-tour-btn {
+  background: #d39c64;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.clear-tour-btn:hover {
+  background: #b57d50;
+}
+
+/* Google Maps Link */
+.route-info a {
+  color: #0056b3;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.route-info a:hover {
+  text-decoration: underline;
 }

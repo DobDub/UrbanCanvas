@@ -23,13 +23,11 @@ function App() {
     const fetchMurals = async () => {
       try {
         const response = await fetch("http://localhost:8000/api/murals");
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
 
         const formattedMurals = data.map((mural) => ({
           id: mural.id || Math.random(),
-          // Fallback to "Unnamed Mural" if name is missing or empty
           name: mural.name && mural.name.trim() ? mural.name : "Unnamed Mural",
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
@@ -89,12 +87,10 @@ function App() {
   const addToTour = (mural) => {
     setTourMurals((prev) => {
       if (prev.some((m) => m.id === mural.id)) return prev;
-      console.log("Adding mural to tour:", mural); // Debug log
       return [...prev, mural];
     });
   };
 
-  // Helper function to generate a Google Maps directions URL.
   const generateGoogleMapsUrl = () => {
     if (tourMurals.length < 2) return "";
     const origin = `${tourMurals[0].lat},${tourMurals[0].lng}`;
@@ -110,21 +106,13 @@ function App() {
     return url;
   };
 
-  // Helper function to generate a string representation of the tour path.
-  // If the mural name is "Unnamed Mural", it falls back to using the artist's name.
   const generatePathString = () => {
-    if (tourMurals.length === 0) return "";
     return tourMurals
-      .map((m) => {
-        // Use mural name if available and not "Unnamed Mural", otherwise use artist name.
-        if (m.name === "Unnamed Mural") {
-          return m.details.artist && m.details.artist.trim()
-            ? m.details.artist
-            : "Unknown Artist";
-        }
-        return m.name;
-      })
-      .join(" → ");
+      .map((m, index) => (
+        <span key={m.id} className="path-step">
+          <span className="step-number">{index + 1}</span> {m.name}
+        </span>
+      ));
   };
 
   if (loading) return <div className="loading">Loading murals...</div>;
@@ -134,9 +122,7 @@ function App() {
     <div>
       <div className="header">
         Montreal Art Murals
-        <div className="header-subtext">
-          Explore murals all around the city
-        </div>
+        <div className="header-subtext">Explore murals all around the city</div>
       </div>
 
       <FilterMenu
@@ -165,51 +151,23 @@ function App() {
       {tourMurals.length > 0 && (
         <div className="tour-section">
           <h3>Your Tour ({tourMurals.length} murals)</h3>
-          <button onClick={() => setTourMurals([])}>Clear Tour</button>
+          <button className="clear-tour-btn" onClick={() => setTourMurals([])}>Clear Tour</button>
 
           {tourDirections?.routes?.[0] && (
             <div className="route-info">
-              <p>
-                Total Distance:{" "}
-                {(
-                  tourDirections.routes[0].legs.reduce(
-                    (sum, leg) => sum + leg.distance.value,
-                    0
-                  ) / 1000
-                ).toFixed(2)}{" "}
-                km
-              </p>
-              <p>
-                Estimated Time:{" "}
-                {Math.round(
-                  tourDirections.routes[0].legs.reduce(
-                    (sum, leg) => sum + leg.duration.value,
-                    0
-                  ) / 60
-                )}{" "}
-                minutes
-              </p>
-              <p>
+              <p><strong>Total Distance:</strong> {(tourDirections.routes[0].legs.reduce((sum, leg) => sum + leg.distance.value, 0) / 1000).toFixed(2)} km</p>
+              <p><strong>Estimated Time:</strong> {Math.round(tourDirections.routes[0].legs.reduce((sum, leg) => sum + leg.duration.value, 0) / 60)} minutes</p>
+              <div className="path-container">
                 <strong>Path:</strong> {generatePathString()}
-              </p>
-              <p>
-                <a
-                  href={generateGoogleMapsUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Full Route in Google Maps
-                </a>
-              </p>
+              </div>
+              <p><a href={generateGoogleMapsUrl()} target="_blank" rel="noopener noreferrer">View Full Route in Google Maps</a></p>
             </div>
           )}
         </div>
       )}
 
       {filteredMurals.length === 0 && (
-        <div className="no-results">
-          No murals found matching the current filters
-        </div>
+        <div className="no-results">No murals found matching the current filters</div>
       )}
     </div>
   );
