@@ -34,7 +34,8 @@ async function importData() {
                     longitude: artwork.CoordonneeLongitude,
                     material: artwork.Materiaux,
                     technique: artwork.Technique,
-                    image: null
+                    image: null,
+                    type: "public-art"
                 };
             } catch (err) {
                 console.error(`Error processing artwork ${artwork.NoInterne}:`, err);

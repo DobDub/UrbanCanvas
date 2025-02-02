@@ -40,7 +40,8 @@ async function importCSV() {
                         longitude: row.longitude,
                         material: null,
                         technique: null,
-                        image: row.image || null
+                        image: row.image || null,
+                        type: "mural"
                     };
                     data.push(transformed);
                 })

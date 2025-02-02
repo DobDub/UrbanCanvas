@@ -36,6 +36,7 @@ function App() {
           year: mural.year,
           area: mural.area,
           image: mural.image,
+          type: mural.type,
           details: {
             artist: mural.artist || "Unknown Artist",
             address: mural.address || "No Address Provided",

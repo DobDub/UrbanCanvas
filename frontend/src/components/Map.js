@@ -12,7 +12,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-
+import "../assets/spnfico.png"
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 100px)",
@@ -85,7 +85,16 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
               key={mural.id}
               position={{ lat: mural.lat, lng: mural.lng }}
               onClick={() => setSelectedMural(mural)}
+              icon={
+                window.google
+                  ? {
+                    url: require(mural.type === "mural" ? "../assets/spnfico.png" : "../assets/museumicon.png"),
+                    scaledSize: new window.google.maps.Size(25, 25), // Adjust size as needed
+                  }
+                  : undefined
+              }
             />
+
           ))}
 
           {tourMurals.length >= 2 && (
