@@ -4,15 +4,15 @@ import {
   LoadScript,
   Marker,
   Autocomplete,
-  DirectionsService,
-  DirectionsRenderer
+  DirectionsService
 } from "@react-google-maps/api";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import "../assets/spnfico.png"
+import "../assets/spnfico.png";
+
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 100px)",
@@ -28,7 +28,6 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
   const [selectedMural, setSelectedMural] = useState(null);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [searchBox, setSearchBox] = useState(null);
-  const [directions, setDirections] = useState(null);
 
   const onSearchBoxLoad = (ref) => {
     setSearchBox(ref);
@@ -52,6 +51,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
       libraries={["places"]}
     >
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        {/* Search Box */}
         <Autocomplete onLoad={onSearchBoxLoad} onPlaceChanged={onPlaceChanged}>
           <input
             type="text"
@@ -74,12 +74,14 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
           />
         </Autocomplete>
 
+        {/* Google Map */}
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
           zoom={12}
           onClick={() => setSelectedMural(null)}
         >
+          {/* Murals Pins */}
           {markers.map((mural) => (
             <Marker
               key={mural.id}
@@ -88,48 +90,45 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
               icon={
                 window.google
                   ? {
-                    url: require(mural.type === "mural" ? "../assets/spnfico.png" : "../assets/publicart.png"),
-                    scaledSize: new window.google.maps.Size(32, 32), // Adjust size as needed
-                  }
+                      url: require(mural.type === "mural" ? "../assets/spnfico.png" : "../assets/publicart.png"),
+                      scaledSize: new window.google.maps.Size(32, 32),
+                    }
                   : undefined
               }
             />
-
           ))}
 
+          {/* DirectionsService (Still Computes Distance & Time but Doesn't Render Path) */}
           {tourMurals.length >= 2 && (
-            <>
-              <DirectionsService
-                options={{
-                  destination: {
-                    lat: tourMurals[tourMurals.length - 1].lat,
-                    lng: tourMurals[tourMurals.length - 1].lng
-                  },
-                  origin: {
-                    lat: tourMurals[0].lat,
-                    lng: tourMurals[0].lng
-                  },
-                  waypoints: tourMurals.slice(1, -1).map(mural => ({
-                    location: { lat: mural.lat, lng: mural.lng },
-                    stopover: true,
-                  })),
-                  travelMode: 'WALKING',
-                  optimizeWaypoints: true,
-                }}
-                callback={(result, status) => {
-                  if (status === 'OK') {
-                    setDirections(result);
-                    onDirectionsCalculated(result);
-                  } else {
-                    onDirectionsCalculated(null);
-                  }
-                }}
-              />
-              {directions && <DirectionsRenderer options={{ directions }} />}
-            </>
+            <DirectionsService
+              options={{
+                destination: {
+                  lat: tourMurals[tourMurals.length - 1].lat,
+                  lng: tourMurals[tourMurals.length - 1].lng
+                },
+                origin: {
+                  lat: tourMurals[0].lat,
+                  lng: tourMurals[0].lng
+                },
+                waypoints: tourMurals.slice(1, -1).map(mural => ({
+                  location: { lat: mural.lat, lng: mural.lng },
+                  stopover: true,
+                })),
+                travelMode: 'WALKING',
+                optimizeWaypoints: true,
+              }}
+              callback={(result, status) => {
+                if (status === 'OK') {
+                  onDirectionsCalculated(result); // Pass data for UI display
+                } else {
+                  onDirectionsCalculated(null);
+                }
+              }}
+            />
           )}
         </GoogleMap>
 
+        {/* Mural Info Window */}
         {selectedMural && (
           <Dialog
             open={Boolean(selectedMural)}
