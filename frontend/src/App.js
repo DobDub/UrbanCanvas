@@ -143,18 +143,18 @@ function App() {
 
       <FilterMenu
         isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(!isMenuOpen)}
-        filterArtist={filterArtist}
-        setFilterArtist={setFilterArtist}
-        filterYear={filterYear}
-        setFilterYear={setFilterYear}
-        filterArea={filterArea}
-        setFilterArea={setFilterArea}
+        onClose={() => setIsMenuOpen(!isMenuOpen)}//bubshit
+        filterArtist={filterArtist}//bubshit
+        setFilterArtist={setFilterArtist}//bubshit
+        filterYear={filterYear}//bubshit
+        setFilterYear={setFilterYear}//bubshit
+        filterArea={filterArea}//bubshit
+        setFilterArea={setFilterArea}//bubshit
         filterType={filterType} // Pass filterType state
         setFilterType={setFilterType} // Pass setFilterType function
-        uniqueYears={uniqueYears}
-        uniqueAreas={uniqueAreas}
-        murals={murals}
+        uniqueYears={uniqueYears}//bubshit
+        uniqueAreas={uniqueAreas}//bubshit
+        murals={murals}//bubshit
       />
 
       <div className="map-container">
