@@ -20,6 +20,7 @@ function App() {
   const [filterType, setFilterType] = useState("All"); // Add filterType state here
   const [uniqueYears, setUniqueYears] = useState([]);
   const [uniqueAreas, setUniqueAreas] = useState([]);
+  const [uniqueTypes, setUniqueTypes] = useState([]); // Add uniqueTypes state
 
   useEffect(() => {
     const fetchMurals = async () => {
@@ -30,7 +31,7 @@ function App() {
 
         const formattedMurals = data.map((mural) => ({
           id: mural.id || Math.random(),
-          name: mural.name && mural.name.trim() ? mural.name : "",
+          name: mural.name && mural.name.trim() ? mural.name : mural.artist,
           lat: parseFloat(mural.latitude),
           lng: parseFloat(mural.longitude),
           year: mural.year,
@@ -47,11 +48,14 @@ function App() {
 
         const years = [...new Set(formattedMurals.map((m) => m.year))].sort();
         const areas = [...new Set(formattedMurals.map((m) => m.area))].sort();
+        const types = [...new Set(formattedMurals.map((m) => m.type))].sort();
 
         setMurals(formattedMurals);
         setFilteredMurals(formattedMurals);
         setUniqueYears(years);
         setUniqueAreas(areas);
+        setUniqueTypes(types); // Set unique types
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -64,7 +68,7 @@ function App() {
 
   useEffect(() => {
     applyFilters();
-  }, [filterArtist, filterYear, filterArea, filterType, murals]); // Add filterType to the dependency array
+  }, [filterArtist, filterYear, filterArea, filterType, murals]);
 
   const applyFilters = () => {
     let filtered = murals;
@@ -93,14 +97,7 @@ function App() {
   const addToTour = (mural) => {
     setTourMurals((prev) => {
       if (prev.some((m) => m.id === mural.id)) return prev;
-
-      // Check if the mural name is "Unnamed Mural" and replace it with the artist's name
-      const updatedMural = {
-        ...mural,
-        name: mural.name === "" ? mural.details.artist : mural.name,
-      };
-
-      return [...prev, updatedMural];
+      return [...prev, mural];
     });
   };
 
@@ -120,16 +117,13 @@ function App() {
   };
 
   const generatePathString = () => {
-    return tourMurals.map((m, index) => {
-      const muralName = m.name === "Unnamed Mural" ? m.details.artist : m.name;
-      return (
+    return tourMurals
+      .map((m, index) => (
         <span key={m.id} className="path-step">
-          <span className="step-number">{index + 1}</span> {muralName}
+          <span className="step-number">{index + 1}</span> {m.name}
         </span>
-      );
-    });
+      ));
   };
-
 
   if (loading) return <div className="loading">Loading murals...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -150,10 +144,11 @@ function App() {
         setFilterYear={setFilterYear}
         filterArea={filterArea}
         setFilterArea={setFilterArea}
-        filterType={filterType} // Pass filterType state
-        setFilterType={setFilterType} // Pass setFilterType function
+        filterType={filterType}
+        setFilterType={setFilterType} //bubshit
         uniqueYears={uniqueYears}
         uniqueAreas={uniqueAreas}
+        uniqueTypes={uniqueTypes} // Pass uniqueTypes
         murals={murals}
       />
 
