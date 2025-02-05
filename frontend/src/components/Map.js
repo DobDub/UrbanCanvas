@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import "../assets/spnfico.png"; // Make sure the asset exists
+import { capitalize } from "@mui/material";
 
 const containerStyle = {
   width: "100%",
@@ -70,7 +71,7 @@ const Map = ({ markers, tourMurals, addToTour, onDirectionsCalculated }) => {
     ) {
       return {
         url: iconUrl,
-        scaledSize: new window.google.maps.Size(32, 32),
+        scaledSize: new window.google.maps.Size(45, 45),
       };
     } else {
       return {

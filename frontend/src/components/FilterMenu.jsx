@@ -33,8 +33,11 @@ const FilterMenu = ({
     setFilterYear,
     filterArea,
     setFilterArea,
+    filterType,
+    setFilterType,  // Add filterType state
     uniqueYears,
     uniqueAreas,
+    uniqueTypes,   // Add uniqueTypes data for filter
     murals
 }) => {
     const uniqueArtists = murals ? [...new Set(murals.map(mural => mural.details.artist))].sort() : [];
@@ -101,6 +104,23 @@ const FilterMenu = ({
                             <MenuItem value="All">All Areas</MenuItem>
                             {uniqueAreas.map(area => (
                                 <MenuItem key={area} value={area}>{area}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* New "Type" filter */}
+                    <FormControl fullWidth style={{ marginBottom: 20 }}>
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            label="Type"
+                        >
+                            <MenuItem value="All">All Types</MenuItem>
+                            {uniqueTypes.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
